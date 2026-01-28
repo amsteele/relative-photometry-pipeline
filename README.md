@@ -23,7 +23,7 @@ scientific correctness.
 - Designed for real (non-ideal) observational data
 
 ## Example Output
-![Example light curve](examples/example_lightcurve.png)
+![Example light curve](wd1145_042017.gif)
 
 (Animated GIFs are used during validation to inspect alignment and flux stability.)
 
