@@ -1,0 +1,28 @@
+from __future__ import annotations
+from astropy.io import fits
+from matplotlib.dates import date2num
+import datetime as dt
+
+def read_image_and_header(path):
+    with fits.open(path, memmap=False) as hdul:
+        data = hdul[0].data
+        hdr = hdul[0].header
+    if data is None:
+        raise ValueError(f"No image data in primary HDU: {path}")
+    return data.astype(float), hdr
+
+def header_date_to_num(hdr, keys=("DATE-OBS","DATE")):
+    s = None
+    for k in keys:
+        v = hdr.get(k)
+        if v:
+            s = str(v).strip()
+            break
+    if not s:
+        raise KeyError(f"No time keyword found in header. Tried: {keys}")
+    for fmt in ("%Y-%m-%dT%H:%M:%S.%f", "%Y-%m-%dT%H:%M:%S"):
+        try:
+            return date2num(dt.datetime.strptime(s, fmt))
+        except ValueError:
+            pass
+    raise ValueError(f"Unparseable time string '{s}' from keys {keys}")
